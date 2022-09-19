@@ -67,6 +67,7 @@ RUN echo "==> Finishing..." \
 	&& install -m644 ${NGINX_PREFIX}/html/50x.html /usr/share/nginx/html/ \
 	&& ln -sf ${NGINX_PREFIX}/sbin/nginx /usr/sbin/nginx \
 	&& apk update \
+	&& apk add curl \
 	&& apk add --no-cache \
 	libpcrecpp libpcre16 libpcre32 libressl libssl1.1 pcre libldap libgcc libstdc++ \
 	&& rm -rf /var/cache/apk/* \
