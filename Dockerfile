@@ -1,10 +1,10 @@
-FROM alpine:3.16 as nginx-build
+FROM centos as nginx-build
 
 ENV NGINX_VERSION release-1.20.2
 
 RUN echo "==> Installing dependencies..." \
-	&& apk update \
-	&& apk add --virtual build-deps \
+	&& yum update \
+	&& yum install --virtual build-deps \
 	make gcc musl-dev openldap-dev \
 	pcre-dev libressl-dev zlib-dev \
 	linux-headers wget git \
@@ -46,7 +46,7 @@ RUN echo "==> Installing dependencies..." \
 	&& make -j$(getconf _NPROCESSORS_ONLN) \
 	&& make install
 
-FROM alpine:3.16
+FROM centos
 
 ENV DOCKERIZE_VERSION v0.6.1
 
@@ -66,9 +66,8 @@ RUN echo "==> Finishing..." \
 	&& install -m644 ${NGINX_PREFIX}/html/index.html /usr/share/nginx/html/ \
 	&& install -m644 ${NGINX_PREFIX}/html/50x.html /usr/share/nginx/html/ \
 	&& ln -sf ${NGINX_PREFIX}/sbin/nginx /usr/sbin/nginx \
-	&& apk update \
-	&& apk add curl \
-	&& apk add --no-cache \
+	&& yum update \
+	&& yum install curl \
 	libpcrecpp libpcre16 libpcre32 libressl libssl1.1 pcre libldap libgcc libstdc++ \
 	&& rm -rf /var/cache/apk/* \
 	&& wget -O /tmp/dockerize.tar.gz https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
